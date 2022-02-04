@@ -6,41 +6,52 @@ namespace Stone_Scabbard_Paper
     {
         static void Main(string[] args)
         {
-
-            Gamer gamer = new Gamer("Иван");
-            Gamer gamer2 = new Gamer("Петя");
-            Game game = new Game(gamer, gamer2);
-
-            while (true)
+            try
             {
-                StartGame(game);
+                Gamer gamer = new Gamer(""); // подготовка  
+                Gamer gamer2 = new Gamer("Петя"); // подготовка  
+                Game game = new Game(gamer, gamer2); // подготовка  
 
-                Console.WriteLine("Для выхода введите *");
-                if (Console.ReadLine() == "*")
+                while (true) // повторение  игры 
                 {
-                    return;
+                    StartGame(game); // пережаем старторвые  параметры
+                    Console.WriteLine("Для выхода введите *");
+                    if (Console.ReadLine() == "*")
+                    {
+                        return;
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
+        /// <summary>
+        /// одна игра
+        /// </summary>
+        /// <param name="game"></param>
         private static void StartGame(Game game)
         {
-            Console.WriteLine(game.StepGame());
-            Console.WriteLine(game.StatusGame());
+            Console.WriteLine(game.StepGame()); // получили результат  игры
+            Console.WriteLine(game.StatusGame()); // Запросили статус игроков 
         }
     }
-
+    /// <summary>
+    /// Игра
+    /// </summary>
     public class Game
     {
-        public Gamer Gamer1 { get; set; }
-        public Gamer Gamer2 { get; set; }
+        public Gamer Gamer1 { get; set; } // игрок 1 
+        public Gamer Gamer2 { get; set; } // игрок 2
 
-        private  string[] variants = new string[]
+        private  string[] variants = new string[] // варианты  
         {
             "Камень" , "Ножницы" , "Бумага"
         };
 
-        public Game(Gamer gamer1, Gamer gamer2)
+        public Game(Gamer gamer1, Gamer gamer2)  // конструктор 
         {
             try
             {
@@ -53,42 +64,47 @@ namespace Stone_Scabbard_Paper
             }
         }
 
-
-        public string StepGame()
+        public string StepGame() // ход игроков 
         {
-            Gamer1.Option = GetVariant();
-            Gamer2.Option = GetVariant();
-            string rez = GameLogik(Gamer1, Gamer2);
-            return $"Игрок {Gamer1.Name} - { Gamer1.Option}, {Gamer2.Name} - {Gamer2.Option}\n" + rez;
+            Gamer1.Option = GetVariant(); // Вариант  первого игрока 
+            Gamer2.Option = GetVariant(); // Вариант  второго игрока 
+            string rez = GameLogik(Gamer1, Gamer2); // логика  игры 
+            return $"Игрок {Gamer1.Name} - { Gamer1.Option}, {Gamer2.Name} - {Gamer2.Option}\n" + rez; // результат  ишры
         }
 
+        /// <summary>
+        /// Логика  игры
+        /// </summary>
+        /// <param name="gamer1"></param>
+        /// <param name="gamer2"></param>
+        /// <returns></returns>
         private string GameLogik(Gamer gamer1, Gamer gamer2)
         {
-            int i = GetCodeStep(Gamer1.Option);
-            int j = GetCodeStep(gamer2.Option);
+            int i = GetCodeStep(Gamer1.Option); // получаем  индекс маски 
+            int j = GetCodeStep(gamer2.Option); // получаем  индекс маски 
 
-            int[,] vs = new int[,]
+            int[,] vs = new int[,]  // маска  побед
             {
                 { 0 ,1, -1},
                 { -1 ,0, 1},
                 { 1, -1, 0},
             };
 
-            if ( vs[i,j] == 0)
+            if ( vs[i,j] == 0)  // если ничья 
             {
                 Gamer1.Friendship++;
                 Gamer2.Friendship++;
                 return "Ничья";
             }
 
-            if (vs[i, j] == 1)
+            if (vs[i, j] == 1) // если победа  1 игрока 
             {
                 Gamer1.Victiry++;
                 Gamer2.Defeat++;
                 return $"{ Gamer1.Name} победил";
             }
 
-            if (vs[i, j] == -1)
+            if (vs[i, j] == -1) // если  проигрыш   1 игрока 
             {
                 Gamer1.Defeat++;
                 Gamer2.Victiry++;
@@ -98,9 +114,14 @@ namespace Stone_Scabbard_Paper
             return string.Empty;
         }
 
-        private int GetCodeStep(string option)
+
+        /// <summary>
+        /// индекс  варианта по  строке 
+        /// </summary>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        private int GetCodeStep(string option) 
         {
-           
             switch (option)
             {
                 case "Камень": return  0; break;
@@ -108,23 +129,47 @@ namespace Stone_Scabbard_Paper
                 case "Бумага": return 2; break;
                 default: throw new Exception("Eror");
             }
-
         }
 
-        private string GetVariant()
+        /// <summary>
+        /// Вариант  в  текстовом  представлении 
+        /// </summary>
+        /// <returns></returns>
+        private string GetVariant()  
         {
             Random random = new Random();
             return  variants[random.Next(0, variants.Length)];
         }
 
+        /// <summary>
+        /// Статус  игры
+        /// </summary>
+        /// <returns>Общий  счет игры</returns>
         public string StatusGame ()
         {
             return Gamer1.PrintInfo() + "\n" + Gamer2.PrintInfo();
         }
     }
+      
+    public class Gamer
+    {
+        public string Name { get; set; }
+        public string Option { get; set; }
 
-        public class Gamer
-        {
+        /// <summary>
+        /// победы
+        /// </summary>
+        public int Victiry { get; set; }
+
+        /// <summary>
+        /// поражения
+        /// </summary>
+        public int Defeat { get; set; }
+        /// <summary>
+        /// ничьи
+        /// </summary>
+        public int Friendship { get; set; }
+
         public Gamer(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -138,19 +183,9 @@ namespace Stone_Scabbard_Paper
             Friendship = 0;
         }
 
-       public string  Name { get; set; }
-       public string  Option { get; set; }
-       
-       public int   Victiry { get; set; }
-
-       public int Defeat { get; set; }
-
-       public int Friendship { get; set; }
-
-
-      public string PrintInfo()
-      {
-        return $"Игрок {Name} имеет  побед:{Victiry} проигрышей:{Defeat}  ничейных результатов:{Friendship}";
-      }
+        public string PrintInfo()
+        {
+            return $"Игрок {Name} имеет  побед:{Victiry} проигрышей:{Defeat}  ничейных результатов:{Friendship}";
+        }
     }
 }
