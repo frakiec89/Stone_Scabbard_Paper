@@ -8,7 +8,7 @@ namespace Stone_Scabbard_Paper
         {
             try
             {
-                Gamer gamer = new Gamer(""); // подготовка  
+                Gamer gamer = new Gamer("Иван"); // подготовка  
                 Gamer gamer2 = new Gamer("Петя"); // подготовка  
                 Game game = new Game(gamer, gamer2); // подготовка  
 
