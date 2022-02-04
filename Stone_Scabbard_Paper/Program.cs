@@ -6,9 +6,14 @@ namespace Stone_Scabbard_Paper
     {
         static void Main(string[] args)
         {
+
+            Gamer gamer = new Gamer("Иван");
+            Gamer gamer2 = new Gamer("Петя");
+            Game game = new Game(gamer, gamer2);
+
             while (true)
             {
-                StartGame();
+                StartGame(game);
 
                 Console.WriteLine("Для выхода введите *");
                 if (Console.ReadLine() == "*")
@@ -18,11 +23,8 @@ namespace Stone_Scabbard_Paper
             }
         }
 
-        private static void StartGame()
+        private static void StartGame(Game game)
         {
-            Gamer gamer = new Gamer("Иван");
-            Gamer gamer2 = new Gamer("Петя");
-            Game game = new Game(gamer, gamer2);
             Console.WriteLine(game.StepGame());
             Console.WriteLine(game.StatusGame());
         }
@@ -57,7 +59,7 @@ namespace Stone_Scabbard_Paper
             Gamer1.Option = GetVariant();
             Gamer2.Option = GetVariant();
             string rez = GameLogik(Gamer1, Gamer2);
-            return $"Игрок {Gamer1.Name} -{ Gamer1.Option}, {Gamer2.Name} - {Gamer2.Option}+\n" + rez;
+            return $"Игрок {Gamer1.Name} - { Gamer1.Option}, {Gamer2.Name} - {Gamer2.Option}\n" + rez;
         }
 
         private string GameLogik(Gamer gamer1, Gamer gamer2)
