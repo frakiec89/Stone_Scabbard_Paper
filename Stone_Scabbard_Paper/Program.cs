@@ -8,13 +8,20 @@ namespace Stone_Scabbard_Paper
         {
             try
             {
+                Console.WriteLine("Игра камень ножны  бумага");
+
                 Gamer gamer = new Gamer("Иван"); // подготовка  
                 Gamer gamer2 = new Gamer("Петя"); // подготовка  
-                Game game = new Game(gamer, gamer2); // подготовка  
 
+                Console.WriteLine($"Играют {gamer.Name} - vs {gamer2.Name}");
+                Game game = new Game(gamer, gamer2); // подготовка  
+                int x = 0;
                 while (true) // повторение  игры 
                 {
-                    StartGame(game); // пережаем старторвые  параметры
+                    x++; // ход 
+                    Console.WriteLine($"Раунд {x}:"); 
+                    StartGame(game); // передаем  стартовые  параметры
+                    Console.WriteLine("Что  бы  продолжить  битву нажмите  ENTER");
                     Console.WriteLine("Для выхода введите *");
                     if (Console.ReadLine() == "*")
                     {
